@@ -1,0 +1,24 @@
+.task{
+    display:flex;
+    flex-direction: column;
+
+    border-radius: 5px;
+    background-color: rgb(200, 200, 200);
+    margin: 5px;
+    padding: 15px;
+    display: flex;
+    width: 100%;
+}
+
+.task:hover{
+    transform: scale(1.01);
+}
+
+.title{
+    size: 16px;
+    font-weight: bold;
+}
+
+.status, .date{
+    color: rgb(49, 49, 49);
+}
