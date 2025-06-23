@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import { type TaskCardProps } from './SideBar';
 const TASK_URL: string = 'http://localhost:8080/tasks';
 
-export interface TaskCardProps{
-    className: string
-    title: string,
-    status: boolean,
-    dueDate: string,
+interface Props extends TaskCardProps{
+  className:string
+  delTask: (title:string) => void;
+  addTask: (obj:TaskCardProps) => void;
 }
 
-const TaskCard: React.FC<TaskCardProps> = (props:TaskCardProps) => {
+const TaskCard: React.FC<Props> = (props:Props) => {
   const dateObj = new Date(props.dueDate);
   const formattedDate: string = dateObj.toLocaleDateString('en-GB', {
     day: '2-digit',
@@ -18,15 +18,20 @@ const TaskCard: React.FC<TaskCardProps> = (props:TaskCardProps) => {
 
   const deleteTask = async (titleName:string) => {
     const URL = TASK_URL + `/${titleName}`;
-    console.log(URL);
     const responce = await fetch(URL, {
       method: 'DELETE',
     });
 
-    if(responce.ok === false)
+    if(responce.ok === true)
     {
+      
+    }
+    else{
       console.log(`Cant't delete a task.`);
     }
+  };
+
+  const changeTitle = () => {
 
   };
 
@@ -40,7 +45,7 @@ const TaskCard: React.FC<TaskCardProps> = (props:TaskCardProps) => {
         {isHovered && 
         <div className = "flex justify-end">
           <button type = "button" className = "btn btn-outline-light" onClick = {() => deleteTask(props.title)}>Delete Task</button>
-          <button type = "button" className = "btn btn-outline-dark">Change Title</button>
+          <button type = "button" className = "btn btn-outline-dark" onClick = {() => changeTitle()}>Change Title</button>
         </div>
         }
       </div>

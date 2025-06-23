@@ -1,7 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import TaskCard, { type TaskCardProps } from './TaskCard';
+import TaskCard from './TaskCard';
 import "./TaskCard.css";
 
+export interface TaskCardProps{
+    title: string,
+    status: boolean,
+    dueDate: string,
+}
 
 const ADD_TASK_KEY:string = import.meta.env.ADD_NEW_TASK_MESSAGE;
 const TASK_URL: string = 'http://localhost:8080/tasks';
@@ -32,6 +37,13 @@ const SideBar: React.FC<Props> = (props: Props) =>
         fetchedTasks();
     }, []);
 
+    const deleteTask = (title:string) => {
+        tasks.filter(obj => obj.title === title);
+    }
+    const addTask = (obj: TaskCardProps) => {
+        tasks.push(obj);
+    }
+
     return (
         <div className = {props.className}>
             <div>
@@ -42,6 +54,8 @@ const SideBar: React.FC<Props> = (props: Props) =>
                         title={task.title}
                         status={task.status}
                         dueDate={task.dueDate}
+                        delTask = {deleteTask}
+                        addTask = {addTask}
                     />
                 ))}
             </div>

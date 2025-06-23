@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import type { TaskCardProps } from './TaskCard';
 
 const months: string[] = [
   '-', 'January', 'February', 'March', 'April', 'May', 'June',
@@ -43,7 +42,7 @@ const AddNewTask: React.FC = () => {
         title: tasksName,
         status: false,
         dueDate: `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
-};
+    };
         const newResponce = await fetch(TASK_URL, {
             method: 'POST',
             headers: {
