@@ -1,67 +1,34 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import TaskCard from './TaskCard';
 import "./TaskCard.css";
+import type { TaskCardProps } from './App';
 
-export interface TaskCardProps{
-    title: string,
-    status: boolean,
-    dueDate: string,
+export const ADD_TASK_KEY = import.meta.env.VITE_ADD_NEW_TASK_MESSAGE;
+
+interface SideBarProps{
+    className:string,
+    setComponent: React.Dispatch<React.SetStateAction<string | null>>;
+    tasks: TaskCardProps[],
+    setTasks: React.Dispatch<React.SetStateAction<TaskCardProps[]>>;
 }
 
-const ADD_TASK_KEY:string = import.meta.env.ADD_NEW_TASK_MESSAGE;
-const TASK_URL: string = 'http://localhost:8080/tasks';
-
-interface Props{
-    className: string;
-    selectedComponent: (component: string) => void;
-}
-
-const SideBar: React.FC<Props> = (props: Props) =>
+const SideBar: React.FC<SideBarProps> = (props: SideBarProps) =>
 {
-    const [tasks, setTasks] = useState<TaskCardProps[]>([]);
-
-    useEffect(() => {
-        const fetchedTasks = async () => {
-            const responce = await fetch(TASK_URL);
-
-            if(responce.ok === false)
-            {
-                console.log("Cant get the data");
-                return;
-            }
-
-            const result: TaskCardProps[] = await responce.json();
-            console.log(result);
-            setTasks(result);
-        }
-        fetchedTasks();
-    }, []);
-
-    const deleteTask = (title:string) => {
-        tasks.filter(obj => obj.title === title);
-    }
-    const addTask = (obj: TaskCardProps) => {
-        tasks.push(obj);
-    }
-
     return (
         <div className = {props.className}>
             <div>
-                {tasks.map((task, index) => (
+                {props.tasks.map((task, index) => (
                     <TaskCard
-                        className = "task"
                         key={index}
-                        title={task.title}
-                        status={task.status}
-                        dueDate={task.dueDate}
-                        delTask = {deleteTask}
-                        addTask = {addTask}
+                        className = "task"
+                        obj = {task}
+                        setTasks={props.setTasks}
                     />
                 ))}
             </div>
-            <div>
-                <button type = "button" className = "btn btn-outline-secondary" onClick={() => props.selectedComponent(ADD_TASK_KEY)}>Add New Task</button>
-            </div>
+            {<div>
+                <button type = "button" className = "btn btn-outline-secondary" onClick={() => {props.setComponent(ADD_TASK_KEY), alert(ADD_TASK_KEY)}}>Add New Task</button>
+            </div>}
         </div>
     );
 };

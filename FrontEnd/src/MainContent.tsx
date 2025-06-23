@@ -1,6 +1,6 @@
 import React from 'react';
 import AddNewTask from './AddNewTask';
-const ADD_TASK_KEY:string = import.meta.env.ADD_NEW_TASK_MESSAGE; 
+import { ADD_TASK_KEY } from './SideBar';
 
 type MainContentProps = {
     className: string;

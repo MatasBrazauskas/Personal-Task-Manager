@@ -1,30 +1,25 @@
 import React, { useState } from 'react';
-import { type TaskCardProps } from './SideBar';
-const TASK_URL: string = 'http://localhost:8080/tasks';
+import { type TaskCardProps } from './App';
+import { URL } from './App';
 
-interface Props extends TaskCardProps{
+interface Props{
   className:string
-  delTask: (title:string) => void;
-  addTask: (obj:TaskCardProps) => void;
+  obj: TaskCardProps,
+  setTasks: React.Dispatch<React.SetStateAction<TaskCardProps[]>>;
 }
 
 const TaskCard: React.FC<Props> = (props:Props) => {
-  const dateObj = new Date(props.dueDate);
-  const formattedDate: string = dateObj.toLocaleDateString('en-GB', {
-    day: '2-digit',
-    month: 'short',
-    year: 'numeric',
-  });
 
   const deleteTask = async (titleName:string) => {
-    const URL = TASK_URL + `/${titleName}`;
-    const responce = await fetch(URL, {
+    const DELETE_URL = URL + `/${titleName}`;
+    const responce = await fetch(DELETE_URL, {
       method: 'DELETE',
     });
 
     if(responce.ok === true)
     {
-      
+      console.log("Deleteing a task");
+      props.setTasks(prevTasks => prevTasks.filter(task => task.title !== titleName));
     }
     else{
       console.log(`Cant't delete a task.`);
@@ -40,18 +35,18 @@ const TaskCard: React.FC<Props> = (props:Props) => {
   return (
     <div onMouseEnter={() => setIsHovered(true)} onMouseLeave = {() => setIsHovered(false)} className = {props.className}>
       <div className = "flex justify-between">
-        <p className = "title justify-end">{props.title}</p>
+        <p className = "title justify-end">{props.obj.title}</p>
 
         {isHovered && 
         <div className = "flex justify-end">
-          <button type = "button" className = "btn btn-outline-light" onClick = {() => deleteTask(props.title)}>Delete Task</button>
+          <button type = "button" className = "btn btn-outline-light" onClick = {() => deleteTask(props.obj.title)}>Delete Task</button>
           <button type = "button" className = "btn btn-outline-dark" onClick = {() => changeTitle()}>Change Title</button>
         </div>
         }
       </div>
       <div className = "flex justify-start">
-        <p className = "status">{props.status ? 'Completed' : 'Pending'}</p>
-        <p className = "date">{formattedDate}</p>
+        <p className = "status">{props.obj.status ? 'Completed' : 'Pending'}</p>
+        <p className = "date">{props.obj.dueDate}</p>
       </div>
     </div>
   );

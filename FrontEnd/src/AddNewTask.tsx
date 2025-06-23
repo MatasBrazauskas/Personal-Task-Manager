@@ -51,7 +51,10 @@ const AddNewTask: React.FC = () => {
             body: JSON.stringify(taskPayload),
         });
 
-        if(!newResponce.ok){
+        if(newResponce.ok){
+          //prop(taskPayload);
+        }
+        else{
           console.log(`Can't add a task - {obj}`);
         }
 

@@ -30,5 +30,5 @@ public interface TaskRepository extends JpaRepository<Entities, Long>
                     @Param("dueDate") LocalDate dueDate);
 
     @Query(value = "SELECT EXISTS(SELECT 1 FROM tasks WHERE title = :titleName)", nativeQuery = true)
-    Long existsByTitle(@Param("titleName") String titleName);
+    long existsByTitle(@Param("titleName") String titleName);
 }
