@@ -1,69 +1,78 @@
 import React, { useState } from 'react';
+import { TASK_URL, DAYS_URL, type TaskCardProps } from './App';
 
-const months: string[] = [
-  '-', 'January', 'February', 'March', 'April', 'May', 'June',
-  'July', 'August', 'September', 'October', 'November', 'December'
-];
-export const TASK_URL: string = 'http://localhost:8080/tasks';
+const days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 
-const AddNewTask: React.FC = () => {
+interface taskTable{
+    title:string,
+    description:string,
+    date:string,
+    status:boolean,
+}
+
+interface dayTable{
+    task:string,
+    week_days:string[],
+}
+
+interface Props{
+    setTasks: React.Dispatch<React.SetStateAction<TaskCardProps[]>>,
+    setComponent: React.Dispatch<React.SetStateAction<string | null>>,
+}
+
+const AddNewTask: React.FC<Props> = (props: Props) => {
   const [tasksName, setTasksName] = useState<string>('');
-  const [selectedMonth, setSelectedMonth] = useState<number>(new Date().getMonth());
-  const [selectedDay, setSelectedDay] = useState<number>(new Date().getDay() + 1);
-  const [selectedYear, setSelectedYear] = useState<number>(new Date().getFullYear());
+  const [description, setDescription] = useState<string>('');
+  const [daysArray, setArray] = useState<string[]>([]);
 
-  const getDaysInMonth = (month: number): number => {
-    if (month === 2) return 28;
-    return [4, 6, 9, 11].includes(month) ? 30 : 31;
-  };
+  const addRemoveDay = (day:string) => {
+      const index = daysArray.indexOf(day);
 
-  const currentYear = new Date().getFullYear();
-  const years = ['-'];
-  for (let i = 0; i < 4; i++) {
-    years.push(String(currentYear + i));
+      if(index === -1){
+          setArray(arr => [...arr, day]);
+      }else{
+          setArray(arr => arr.filter(i => i !== day))
+      }
   }
 
-  const handleSumbit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleSumbit = async (e:React.FormEvent) => {
+      e.preventDefault();
 
-    const existCheckUrl = `${TASK_URL}/exist?title=${tasksName}`;
-    const responce = await fetch(existCheckUrl, {
-        method: "GET",
-        headers: {
-            'Content-Type': 'application/json'
-        },
-    });
-
-    console.log(responce);
-    const bool = await Boolean(responce.json());
-
-    if(responce.ok && bool === true){
-      const taskPayload = {
+      const date = new Date();
+      const taskObj:taskTable = {
         title: tasksName,
+        description: description,
+        date: `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}-${String(date.getDay()).padStart(2, '0')}`,
         status: false,
-        dueDate: `${selectedYear}-${String(selectedMonth).padStart(2, '0')}-${String(selectedDay).padStart(2, '0')}`
-    };
-        const newResponce = await fetch(TASK_URL, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(taskPayload),
-        });
+      };
+      
+      const responce = await fetch(TASK_URL, {
+        method: 'POST',
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(taskObj),
+      });
 
-        if(newResponce.ok){
-          //prop(taskPayload);
-        }
-        else{
-          console.log(`Can't add a task - {obj}`);
-        }
+      if(responce.ok){
+          const obj: TaskCardProps = {
+              title:taskObj.title,
+              date: taskObj.date,
+              days: daysArray,
+          }
+          props.setTasks(arr => [...arr, obj]);
+      }
+      else{
+        console.log("Can't add a object.")
+        return;
+      }
+      
 
-    }else{
-      console.log(responce);
-        console.log("Name already exist");
-    }
-
-  };
+      const daysObj: dayTable = {
+          task: taskObj.title,
+          week_days:daysArray,
+      }
+  }
 
   return (
     <>
@@ -72,22 +81,27 @@ const AddNewTask: React.FC = () => {
                 type="text"
                 onChange={(e) => setTasksName(e.target.value)}
                 placeholder="Enter Task Name"
+            /> 
+
+            <input
+                type="text"
+                onChange={(e) => setDescription(e.target.value)}
+                placeholder='Enter Description For A Task'
             />
-            <select onChange={(e) => setSelectedMonth(parseInt(e.target.value))}>
-                {months.map((month, i) => (
-                <option key={i} value={i}>{month}</option>
-                ))}
-            </select>
-            <select onChange = {(e) => setSelectedDay(parseInt(e.target.value))}>
-                {[...Array(getDaysInMonth(selectedMonth))].map((_, i) => (
-                <option key={i + 1} value={i + 1}>{i + 1}</option>
-                ))}
-            </select>
-            <select onChange={(e) => setSelectedYear(parseInt(e.target.value))}>
-                {years.map((year, i) => (
-                <option key={i} value={year}>{year}</option>
-                ))}
-            </select>
+
+            {days.map((day, index) => (
+                <div key={index}>
+                    <input
+                        type="checkbox"
+                        id={day}
+                        value={day.toUpperCase()}
+                        onChange={(e) => addRemoveDay(e.target.value)}
+                        name="daysOfWeek"
+                    />
+                    <label htmlFor={day}>{day}</label>
+                </div>
+            ))}
+            
 
             <button type="submit">Submit</button>
         </form>

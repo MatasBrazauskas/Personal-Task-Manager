@@ -27,7 +27,7 @@ const SideBar: React.FC<SideBarProps> = (props: SideBarProps) =>
                 ))}
             </div>
             {<div>
-                <button type = "button" className = "btn btn-outline-secondary" onClick={() => {props.setComponent(ADD_TASK_KEY), alert(ADD_TASK_KEY)}}>Add New Task</button>
+                <button type = "button" className = "btn btn-outline-secondary" onClick={() => props.setComponent(ADD_TASK_KEY)}>Add New Task</button>
             </div>}
         </div>
     );

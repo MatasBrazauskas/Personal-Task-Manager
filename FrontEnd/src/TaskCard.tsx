@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { type TaskCardProps } from './App';
-import { URL } from './App';
+import { TASK_URL } from './App';
 
 interface Props{
   className:string
@@ -11,7 +11,7 @@ interface Props{
 const TaskCard: React.FC<Props> = (props:Props) => {
 
   const deleteTask = async (titleName:string) => {
-    const DELETE_URL = URL + `/${titleName}`;
+    const DELETE_URL = TASK_URL + `/${titleName}`;
     const responce = await fetch(DELETE_URL, {
       method: 'DELETE',
     });
@@ -45,8 +45,7 @@ const TaskCard: React.FC<Props> = (props:Props) => {
         }
       </div>
       <div className = "flex justify-start">
-        <p className = "status">{props.obj.status ? 'Completed' : 'Pending'}</p>
-        <p className = "date">{props.obj.dueDate}</p>
+        <p className = "date">{props.obj.date}</p>
       </div>
     </div>
   );

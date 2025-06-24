@@ -5,12 +5,13 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css';
 import './index.css';
 
-export const URL = import.meta.env.VITE_URL;
+export const TASK_URL = import.meta.env.VITE_TASK_URL;
+export const DAYS_URL = import.meta.env.VITE_DAYS_URL;
 
 export interface TaskCardProps{
     title: string,
-    status: boolean,
-    dueDate: string,
+    date: string,
+    days: string[],
 }
 
 function App()
@@ -19,10 +20,8 @@ function App()
     const [tasks, setTasks] = useState<TaskCardProps[]>([]);
 
     useEffect(() => {
-        console.log(URL);
         const fetchedTasks = async () => {
-            const responce = await fetch(URL);
-
+            const responce = await fetch(TASK_URL);
             if(responce.ok === false)
             {
                 console.log("Cant get the data");
@@ -39,7 +38,7 @@ function App()
     return (
         <div className = "container">
             <SideBar className = "sideBar"  setComponent = {setComponent} tasks = {tasks} setTasks = {setTasks}/>
-            <MainContent className = "mainBar" selectedComponent = {component}/>
+            <MainContent className = "mainBar" selectedComponent = {component} setTasks={setTasks} setComponent={setComponent}/>
         </div>
     );
 }
