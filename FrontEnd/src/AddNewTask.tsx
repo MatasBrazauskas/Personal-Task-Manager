@@ -11,7 +11,7 @@ interface taskTable{
 }
 
 interface dayTable{
-    task:string,
+    title:string,
     week_days:string[],
 }
 
@@ -69,8 +69,22 @@ const AddNewTask: React.FC<Props> = (props: Props) => {
       
 
       const daysObj: dayTable = {
-          task: taskObj.title,
+          title: tasksName,
           week_days:daysArray,
+      }
+
+      console.log(DAYS_URL);
+
+      const daysResponce = await fetch(DAYS_URL, {
+          method:'POST',
+          headers: {
+              "Content-Type": "application/json",
+          },
+          body: JSON.stringify(daysObj),
+      });
+
+      if(!daysResponce.ok){
+        console.log("Can' add days to table.")
       }
   }
 
