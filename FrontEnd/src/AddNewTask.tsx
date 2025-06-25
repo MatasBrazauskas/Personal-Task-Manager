@@ -42,7 +42,7 @@ const AddNewTask: React.FC<Props> = (props: Props) => {
       const taskObj:taskTable = {
         title: tasksName,
         description: description,
-        date: `${date.getFullYear()}-${String(date.getMonth()).padStart(2, '0')}-${String(date.getDay()).padStart(2, '0')}`,
+        date: `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`,
         status: false,
       };
       
