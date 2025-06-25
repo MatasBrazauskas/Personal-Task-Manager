@@ -10,4 +10,8 @@ public interface TaskService
     List<TaskResponseDTO> getAllTasksWithDays();
     void AddTask(RepeatingTasks tasks);
     void AddDays(daysAdditionEntity days);
+    void removeDays(String titleName);
+    void removeTask(String titleName);
+    void changeTaskTitleTasks(String changedTitle, String oldTitle);
+    void changeTaskTitleDays(String changedTitle, String oldTitle);
 }

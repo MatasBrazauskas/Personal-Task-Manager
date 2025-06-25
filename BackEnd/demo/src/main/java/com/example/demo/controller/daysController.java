@@ -2,6 +2,7 @@ package com.example.demo.controller;
 
 import com.example.demo.model.TaskDays;
 import com.example.demo.services.TaskService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.example.demo.repository.daysRepository;
@@ -29,7 +30,21 @@ public class daysController
 
     @PostMapping
     void addDays(@RequestBody daysAdditionEntity daysAdditionDTO){
-        System.out.println(daysAdditionDTO.toString());
         taskService.AddDays(daysAdditionDTO);
+    }
+
+    @DeleteMapping("/{titleName}")
+    public ResponseEntity<String> removeTasks(@PathVariable String titleName)
+    {
+        System.out.println(titleName);
+        taskService.removeDays(titleName);
+        return ResponseEntity.ok(titleName);
+    }
+
+    @PatchMapping("/{changedTitle}/{oldTitle}")
+    public ResponseEntity<String> updateTaskTitle(@PathVariable String changedTitle, @PathVariable String oldTitle)
+    {
+        taskService.changeTaskTitleDays(changedTitle, oldTitle);
+        return ResponseEntity.ok(changedTitle);
     }
 }

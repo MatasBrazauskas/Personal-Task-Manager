@@ -28,4 +28,18 @@ public class taskController {
         taskService.AddTask(tasks);
         return ResponseEntity.ok(tasks);
     }
+
+    @DeleteMapping("/{titleName}")
+    public ResponseEntity<String> removeTasks(@PathVariable String titleName)
+    {
+        taskService.removeTask(titleName);
+        return ResponseEntity.ok(titleName);
+    }
+
+    @PatchMapping("/{changedTitle}/{oldTitle}")
+    public ResponseEntity<String> updateTaskTitle(@PathVariable String changedTitle, @PathVariable String oldTitle)
+    {
+        taskService.changeTaskTitleTasks(changedTitle, oldTitle);
+        return ResponseEntity.ok(changedTitle);
+    }
 }

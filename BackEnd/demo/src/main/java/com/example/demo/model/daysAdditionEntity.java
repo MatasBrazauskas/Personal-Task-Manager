@@ -20,14 +20,4 @@ public class daysAdditionEntity
 
     public void setTitle(String title) {this.title = title;}
     public void setWeek_days(List<String> arr){this.week_days = arr;}
-
-    @Override
-    public String toString()
-    {
-        String str = title;
-        for(int i = 0; i < week_days.size(); i++){
-            str = str + week_days.get(i);
-        }
-        return str;
-    }
 }

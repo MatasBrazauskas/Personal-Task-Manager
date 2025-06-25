@@ -11,7 +11,7 @@ public class RepeatingTasks
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", unique = true, nullable = false, columnDefinition = "NVARCHAR(255)")
+    @Column(name = "title", nullable = false, columnDefinition = "NVARCHAR(255)")
     private String title;
 
     @Column(name = "description", nullable = false, columnDefinition = "NVARCHAR(510)")

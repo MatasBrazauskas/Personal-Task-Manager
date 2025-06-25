@@ -54,4 +54,30 @@ public class TaskServiceImpl implements TaskService{
             daysRepository.addDay(days.getTitle(), i);
         }
     }
+
+    @Override
+    @Transactional
+    public void removeDays(String titleName){
+        daysRepository.deleteByTitle(titleName);
+    }
+
+    @Override
+    @Transactional
+    public void removeTask(String titleName){
+        taskRepository.deleteByTitle(titleName);
+    }
+
+    @Override
+    @Transactional
+    public void changeTaskTitleTasks(String changedTitle, String oldTitle)
+    {
+        taskRepository.updateTitles(changedTitle, oldTitle);
+    }
+
+    @Override
+    @Transactional
+    public void changeTaskTitleDays(String changedTitle, String oldTitle)
+    {
+        daysRepository.updateTitles(changedTitle, oldTitle);
+    }
 }

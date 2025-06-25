@@ -28,4 +28,14 @@ public interface taskRepository extends JpaRepository<RepeatingTasks, Long> {
 
     @Query(value = "SELECT * FROM tasks WHERE title = :title", nativeQuery = true)
     Optional<RepeatingTasks> findByTitle(@Param("title")String title);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM tasks WHERE title = :title", nativeQuery = true)
+    void deleteByTitle(@Param("title") String title);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE TASKS SET title = :changedTitle WHERE title = :oldTitle", nativeQuery = true)
+    void updateTitles(@Param("changedTitle") String changedTitle, @Param("oldTitle") String oldTitle);
 }

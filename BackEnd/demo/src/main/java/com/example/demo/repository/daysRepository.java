@@ -19,4 +19,14 @@ public interface daysRepository extends JpaRepository<TaskDays, Long>
     @Query(value = "INSERT INTO days (task, week_day) VALUES(:task, :week_day)", nativeQuery = true)
     void addDay(@Param("task") String task,
                 @Param("week_day") String week_day);
+
+    @Modifying
+    @Transactional
+    @Query(value = "DELETE FROM days WHERE task = :taskTitle", nativeQuery = true)
+    void deleteByTitle(@Param("taskTitle") String taskTitle);
+
+    @Modifying
+    @Transactional
+    @Query(value = "UPDATE TASKS SET title = :changedTitle WHERE title = :oldTitle", nativeQuery = true)
+    void updateTitles(@Param("changedTitle") String changedTitle, @Param("oldTitle") String oldTitle);
 }
