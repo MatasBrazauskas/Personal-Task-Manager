@@ -12,6 +12,9 @@ import java.util.List;
 
 public interface daysRepository extends JpaRepository<TaskDays, Long>
 {
+    @Query(value = "SELECT * FROM day", nativeQuery = true)
+    List<TaskDays> getAllDays();
+
     @Query(value = "SELECT * FROM days WHERE task = :taskTitle", nativeQuery = true)
     List<TaskDays> findByTitle(@Param("taskTitle") String taskTitle);
 

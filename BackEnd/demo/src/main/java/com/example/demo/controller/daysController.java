@@ -1,7 +1,7 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.TaskDays;
-import com.example.demo.services.TaskService;
+import com.example.demo.services.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,37 +14,34 @@ import java.util.List;
 @CrossOrigin(origins = "http://localhost:5173")
 public class daysController
 {
-    private final daysRepository daysRepo;
-    private final TaskService taskService;
+    private final Service service;
 
-    public daysController(daysRepository daysRepo, TaskService taskService)
+    public daysController(Service service)
     {
-        this.daysRepo = daysRepo;
-        this.taskService = taskService;
+        this.service = service;
     }
 
     @GetMapping
-    List<TaskDays> getDays(String titleName){
-        return daysRepo.findByTitle(titleName);
+    List<TaskDays> getDays(){
+        return service.getDays();
     }
 
     @PostMapping
     void addDays(@RequestBody daysAdditionEntity daysAdditionDTO){
-        taskService.AddDays(daysAdditionDTO);
+        service.AddDays(daysAdditionDTO);
     }
 
     @DeleteMapping("/{titleName}")
     public ResponseEntity<String> removeTasks(@PathVariable String titleName)
     {
-        System.out.println(titleName);
-        taskService.removeDays(titleName);
+        service.removeDays(titleName);
         return ResponseEntity.ok(titleName);
     }
 
     @PatchMapping("/{changedTitle}/{oldTitle}")
     public ResponseEntity<String> updateTaskTitle(@PathVariable String changedTitle, @PathVariable String oldTitle)
     {
-        taskService.changeTaskTitleDays(changedTitle, oldTitle);
+        service.changeTaskTitleDays(changedTitle, oldTitle);
         return ResponseEntity.ok(changedTitle);
     }
 }

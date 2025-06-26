@@ -38,4 +38,9 @@ public interface taskRepository extends JpaRepository<RepeatingTasks, Long> {
     @Transactional
     @Query(value = "UPDATE TASKS SET title = :changedTitle WHERE title = :oldTitle", nativeQuery = true)
     void updateTitles(@Param("changedTitle") String changedTitle, @Param("oldTitle") String oldTitle);
+
+    @Modifying
+    @Transactional
+    @Query(value = "", nativeQuery = true)
+    void updateStatus(@Param("title") String title);
 }

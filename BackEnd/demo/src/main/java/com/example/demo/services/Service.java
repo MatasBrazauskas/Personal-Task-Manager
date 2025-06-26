@@ -6,25 +6,29 @@ import com.example.demo.model.TaskResponseDTO;
 import com.example.demo.repository.taskRepository;
 import com.example.demo.repository.daysRepository;
 import com.example.demo.model.daysAdditionEntity;
-import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Service
-public class TaskServiceImpl implements TaskService{
+@org.springframework.stereotype.Service
+public class Service {
     private final taskRepository taskRepository;
     private final daysRepository daysRepository;
 
-    public TaskServiceImpl(taskRepository taskRepo, daysRepository daysRepo)
+    public Service(taskRepository taskRepo, daysRepository daysRepo)
     {
         this.taskRepository = taskRepo;
         this.daysRepository = daysRepo;
     }
 
-    @Override
+    public List<TaskDays> getDays()
+    {
+        return daysRepository.getAllDays();
+    }
+
     public List<TaskResponseDTO> getAllTasksWithDays()
     {
         List<RepeatingTasks> tasks = taskRepository.getAllTasks();
@@ -37,7 +41,6 @@ public class TaskServiceImpl implements TaskService{
 
     }
 
-    @Override
     @Transactional
     public void AddTask(RepeatingTasks tasks) {
         Optional<RepeatingTasks> existingTask = taskRepository.findByTitle(tasks.getTitle());
@@ -47,7 +50,6 @@ public class TaskServiceImpl implements TaskService{
         }
     }
 
-    @Override
     @Transactional
     public void AddDays(daysAdditionEntity days){
         for(String i : days.getWeek_days()){
@@ -55,29 +57,41 @@ public class TaskServiceImpl implements TaskService{
         }
     }
 
-    @Override
     @Transactional
     public void removeDays(String titleName){
         daysRepository.deleteByTitle(titleName);
     }
 
-    @Override
     @Transactional
     public void removeTask(String titleName){
         taskRepository.deleteByTitle(titleName);
     }
 
-    @Override
     @Transactional
     public void changeTaskTitleTasks(String changedTitle, String oldTitle)
     {
         taskRepository.updateTitles(changedTitle, oldTitle);
     }
 
-    @Override
     @Transactional
     public void changeTaskTitleDays(String changedTitle, String oldTitle)
     {
         daysRepository.updateTitles(changedTitle, oldTitle);
+    }
+
+    @Transactional
+    public void resetStatus(String day)
+    {
+        List<RepeatingTasks> taskList = taskRepository.getAllTasks();
+        List<TaskDays> daysList = daysRepository.getAllDays();
+
+        for(RepeatingTasks i : taskList)
+        {
+            List<TaskDays> taskDays = daysList.stream().filter(td -> td.getTask().equals(i.getTitle())).collect(Collectors.toList());
+            if(taskDays.stream().anyMatch(td -> td.getWeekDay().equals(day)))
+            {
+
+            }
+        }
     }
 }
