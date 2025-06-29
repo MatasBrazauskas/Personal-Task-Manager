@@ -95,12 +95,14 @@ const AddNewTask: React.FC<Props> = (props: Props) => {
                 type="text"
                 onChange={(e) => setTasksName(e.target.value)}
                 placeholder="Enter Task Name"
+                className='form-control'
             /> 
 
             <input
                 type="text"
                 onChange={(e) => setDescription(e.target.value)}
                 placeholder='Enter Description For A Task'
+                className='form-control'
             />
 
             {days.map((day, index) => (
@@ -111,13 +113,14 @@ const AddNewTask: React.FC<Props> = (props: Props) => {
                         value={day.toUpperCase()}
                         onChange={(e) => addRemoveDay(e.target.value)}
                         name="daysOfWeek"
+                        className = 'form-check-input'
                     />
                     <label htmlFor={day}>{day}</label>
                 </div>
             ))}
             
 
-            <button type="submit">Submit</button>
+            <button type="submit" className = 'btn btn-primary'>Submit</button>
         </form>
     </>
   );
