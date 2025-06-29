@@ -1,12 +1,11 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.TaskDays;
+import com.example.demo.model.Days;
 import com.example.demo.services.Service;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.example.demo.repository.daysRepository;
-import com.example.demo.model.daysAdditionEntity;
+import com.example.demo.model.DaysResponceDTO;
 import java.util.List;
 
 @RestController
@@ -22,12 +21,12 @@ public class daysController
     }
 
     @GetMapping
-    List<TaskDays> getDays(){
+    List<Days> getDays(){
         return service.getDays();
     }
 
     @PostMapping
-    void addDays(@RequestBody daysAdditionEntity daysAdditionDTO){
+    void addDays(@RequestBody DaysResponceDTO daysAdditionDTO){
         service.AddDays(daysAdditionDTO);
     }
 
@@ -43,5 +42,19 @@ public class daysController
     {
         service.changeTaskTitleDays(changedTitle, oldTitle);
         return ResponseEntity.ok(changedTitle);
+    }
+
+    @PatchMapping("/{day}/status-reset")
+    public ResponseEntity<String> resetStatus(@PathVariable String day)
+    {
+        service.resetStatus(day);
+        return ResponseEntity.ok(day);
+    }
+
+    @PatchMapping("/status/{day}/{task}")
+    public ResponseEntity<String> updateStatus(@PathVariable String day, @PathVariable String task)
+    {
+        service.updateStatus(day, task);
+        return ResponseEntity.ok(day);
     }
 }

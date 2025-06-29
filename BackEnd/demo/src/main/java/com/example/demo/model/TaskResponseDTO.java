@@ -17,7 +17,7 @@ public class TaskResponseDTO
     public LocalDate getDate() {return date;}
     public List<String> getDays() {return days;}
 
-    public TaskResponseDTO(RepeatingTasks repeatingTasks, List<TaskDays> taskDays)
+    public TaskResponseDTO(Tasks repeatingTasks, List<Days> taskDays)
     {
         this.title = repeatingTasks.getTitle();
         this.date = repeatingTasks.getDate();

@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
-import com.example.demo.model.RepeatingTasks;
+import com.example.demo.model.TaskCompletionDTO;
+import com.example.demo.model.Tasks;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,21 +14,20 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface taskRepository extends JpaRepository<RepeatingTasks, Long> {
+public interface taskRepository extends JpaRepository<Tasks, Long> {
 
     @Query(value = "SELECT * FROM tasks", nativeQuery = true)
-    List<RepeatingTasks> getAllTasks();
+    List<Tasks> getAllTasks();
 
     @Modifying
     @Transactional
-    @Query(value = "INSERT INTO tasks (title, description, date, status) VALUES(:title, :description, :date, :status)", nativeQuery = true)
+    @Query(value = "INSERT INTO tasks (title, description, date) VALUES(:title, :description, :date)", nativeQuery = true)
     void insertTask(@Param("title") String title,
                     @Param("description") String description,
-                    @Param("date") LocalDate date,
-                    @Param("status") boolean status);
+                    @Param("date") LocalDate date);
 
     @Query(value = "SELECT * FROM tasks WHERE title = :title", nativeQuery = true)
-    Optional<RepeatingTasks> findByTitle(@Param("title")String title);
+    Optional<Tasks> findByTitle(@Param("title")String title);
 
     @Modifying
     @Transactional
@@ -41,6 +41,8 @@ public interface taskRepository extends JpaRepository<RepeatingTasks, Long> {
 
     @Modifying
     @Transactional
-    @Query(value = "", nativeQuery = true)
-    void updateStatus(@Param("title") String title);
+    @Query("SELECT new com.example.demo.model.TaskCompletionDTO(t.title, d.status) " +
+            "FROM Tasks t JOIN Days d ON d.task = t.title " +
+            "WHERE d.weekDay = :day")
+    List<TaskCompletionDTO> findTasksToComplete(@Param("day") String day);
 }

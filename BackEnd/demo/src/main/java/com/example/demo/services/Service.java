@@ -1,15 +1,17 @@
 package com.example.demo.services;
 
-import com.example.demo.model.RepeatingTasks;
-import com.example.demo.model.TaskDays;
+import com.example.demo.model.Tasks;
+import com.example.demo.model.Days;
 import com.example.demo.model.TaskResponseDTO;
 import com.example.demo.repository.taskRepository;
 import com.example.demo.repository.daysRepository;
-import com.example.demo.model.daysAdditionEntity;
+import com.example.demo.model.DaysResponceDTO;
+import com.example.demo.model.TaskCompletionDTO;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -24,17 +26,17 @@ public class Service {
         this.daysRepository = daysRepo;
     }
 
-    public List<TaskDays> getDays()
+    public List<Days> getDays()
     {
         return daysRepository.getAllDays();
     }
 
     public List<TaskResponseDTO> getAllTasksWithDays()
     {
-        List<RepeatingTasks> tasks = taskRepository.getAllTasks();
+        List<Tasks> tasks = taskRepository.getAllTasks();
         return tasks.stream()
                 .map(task -> {
-                    List<TaskDays> taskDays = daysRepository.findByTitle(task.getTitle());
+                    List<Days> taskDays = daysRepository.findByTitle(task.getTitle());
                     return new TaskResponseDTO(task, taskDays);
                 })
                 .collect(Collectors.toList());
@@ -42,16 +44,16 @@ public class Service {
     }
 
     @Transactional
-    public void AddTask(RepeatingTasks tasks) {
-        Optional<RepeatingTasks> existingTask = taskRepository.findByTitle(tasks.getTitle());
+    public void AddTask(Tasks tasks) {
+        Optional<Tasks> existingTask = taskRepository.findByTitle(tasks.getTitle());
 
         if (existingTask.isEmpty()) {
-            taskRepository.insertTask(tasks.getTitle(), tasks.getDescription(), tasks.getDate(), tasks.getStatus());
+            taskRepository.insertTask(tasks.getTitle(), tasks.getDescription(), tasks.getDate());
         }
     }
 
     @Transactional
-    public void AddDays(daysAdditionEntity days){
+    public void AddDays(DaysResponceDTO days){
         for(String i : days.getWeek_days()){
             daysRepository.addDay(days.getTitle(), i);
         }
@@ -82,16 +84,35 @@ public class Service {
     @Transactional
     public void resetStatus(String day)
     {
-        List<RepeatingTasks> taskList = taskRepository.getAllTasks();
-        List<TaskDays> daysList = daysRepository.getAllDays();
+        daysRepository.resetStatus(day);
+    }
 
-        for(RepeatingTasks i : taskList)
+    @Transactional
+    public List<TaskCompletionDTO> getTasksToComplete(String day)
+    {
+        return taskRepository.findTasksToComplete(day);
+        /*var taskList = taskRepository.getAllTasks();
+        var daysList = daysRepository.getAllDays().stream().
+                filter(td -> td.getWeekDay().equals(day)).toList();
+
+        List<TaskCompletionDTO> tasksToComplete = new ArrayList<>();
+        for(Tasks i : taskList)
         {
-            List<TaskDays> taskDays = daysList.stream().filter(td -> td.getTask().equals(i.getTitle())).collect(Collectors.toList());
-            if(taskDays.stream().anyMatch(td -> td.getWeekDay().equals(day)))
+            int index = daysList.indexOf(i);
+            if(index != -1)
             {
-
+                tasksToComplete.add(new TaskCompletionDTO(i.getTitle(), daysList.get(index).getStatus()));
             }
         }
+
+        System.out.println(tasksToComplete.size());
+
+        return tasksToComplete;*/
+    }
+
+    @Transactional
+    public void updateStatus(String day, String task)
+    {
+        daysRepository.updateStatus(day, task);
     }
 }

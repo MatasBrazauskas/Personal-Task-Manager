@@ -16,7 +16,7 @@ public class CORSconfig implements WebMvcConfigurer {
                 // Or for development, temporarily use "*" (NOT recommended for production):
                 // .allowedOrigins("*") // Allows all origins - BE CAREFUL WITH THIS IN PRODUCTION!
 
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Specify allowed HTTP methods
+                .allowedMethods("*") // Specify allowed HTTP methods
                 .allowedHeaders("*") // Allow all headers (you can specify specific headers like "Content-Type", "Authorization")
                 .allowCredentials(true) // Allow cookies, authorization headers, etc.
                 .maxAge(3600); // How long the pre-flight request results can be cached (in seconds)

@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
-import com.example.demo.model.RepeatingTasks;
+import com.example.demo.model.TaskCompletionDTO;
+import com.example.demo.model.Tasks;
 import com.example.demo.model.TaskResponseDTO;
 import com.example.demo.services.Service;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +23,14 @@ public class taskController {
         return service.getAllTasksWithDays();
     }
 
+    @GetMapping("/{day}")
+    public List<TaskCompletionDTO> getTasksToComplete(@PathVariable String day)
+    {
+        return service.getTasksToComplete(day);
+    }
+
     @PostMapping
-    public ResponseEntity<RepeatingTasks> addTask(@RequestBody RepeatingTasks tasks)
+    public ResponseEntity<Tasks> addTask(@RequestBody Tasks tasks)
     {
         service.AddTask(tasks);
         return ResponseEntity.ok(tasks);
@@ -41,12 +48,5 @@ public class taskController {
     {
         service.changeTaskTitleTasks(changedTitle, oldTitle);
         return ResponseEntity.ok(changedTitle);
-    }
-
-    @PatchMapping("/{day}")
-    public ResponseEntity<String> resetStatus(@PathVariable String day)
-    {
-        service.resetStatus(day);
-        return ResponseEntity.ok(day);
     }
 }
